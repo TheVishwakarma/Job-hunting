@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JobHunter Pro — Sunil Kumar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg0: #080b10;
+    --bg1: #0d1117;
+    --bg2: #161b24;
+    --bg3: #1e2635;
+    --bg4: #252f42;
+    --border: rgba(99,143,255,0.12);
+    --border2: rgba(99,143,255,0.22);
+    --accent: #638fff;
+    --accent2: #3dffc0;
+    --accent3: #ff6b6b;
+    --accent4: #ffb347;
+    --text0: #e8edf5;
+    --text1: #a8b4cc;
+    --text2: #5a6a85;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+  html, body { background: var(--bg0); color: var(--text0); font-family: var(--sans); font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg1); }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+  #root { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px; min-width: 220px; background: var(--bg1);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
+  .logo-name { font-size: 16px; font-weight: 600; color: var(--text0); }
+  .logo-sub { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
+  .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+  .nav-section { padding: 6px 20px 4px; font-size: 10px; font-family: var(--mono); color: var(--text2); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 20px; cursor: pointer; color: var(--text1);
+    font-size: 13px; font-weight: 400; transition: all 0.15s;
+    border-left: 2px solid transparent; user-select: none;
+  }
+  .nav-item:hover { background: var(--bg2); color: var(--text0); }
+  .nav-item.active { background: rgba(99,143,255,0.08); color: var(--accent); border-left-color: var(--accent); }
+  .nav-icon { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .nav-badge {
+    margin-left: auto; background: var(--accent); color: #fff;
+    font-size: 10px; font-family: var(--mono); padding: 1px 5px;
+    border-radius: 3px; font-weight: 700;
+  }
+  .sidebar-footer {
+    padding: 14px 20px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text2); font-family: var(--mono);
+  }
+  .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); margin-right: 6px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+  .topbar {
+    height: 56px; background: var(--bg1); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 28px; gap: 16px; flex-shrink: 0;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .topbar-title { font-size: 15px; font-weight: 600; color: var(--text0); flex: 1; }
+  .topbar-sub { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 6px; font-size: 12px;
+    font-weight: 500; cursor: pointer; transition: all 0.15s;
+    border: 1px solid var(--border2); background: transparent; color: var(--text0);
+    font-family: var(--sans);
+  }
+  .btn:hover { background: var(--bg3); border-color: var(--accent); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #7aa3ff; border-color: #7aa3ff; }
+  .btn-success { background: rgba(61,255,192,0.1); border-color: var(--accent2); color: var(--accent2); }
+  .btn-danger { background: rgba(255,107,107,0.1); border-color: var(--accent3); color: var(--accent3); }
+  .content { flex: 1; padding: 28px; overflow-y: auto; }
+
+  /* Cards */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text0); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* Stat cards */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px;
+    position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .stat-card.blue::before { background: var(--accent); }
+  .stat-card.green::before { background: var(--accent2); }
+  .stat-card.orange::before { background: var(--accent4); }
+  .stat-card.red::before { background: var(--accent3); }
+  .stat-label { font-size: 10px; font-family: var(--mono); color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .stat-value { font-size: 28px; font-weight: 600; font-family: var(--mono); color: var(--text0); line-height: 1; }
+  .stat-change { font-size: 11px; color: var(--text2); margin-top: 6px; }
+  .stat-change.up { color: var(--accent2); }
+  .stat-change.down { color: var(--accent3); }
+
+  /* Grid layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* Job cards */
+  .job-list { display: flex; flex-direction: column; gap: 10px; }
+  .job-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 16px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 10px; align-items: start;
+    transition: all 0.15s; cursor: pointer;
+  }
+  .job-card:hover { border-color: var(--border2); background: var(--bg4); }
+  .job-card.new { border-left: 2px solid var(--accent2); }
+  .job-title { font-size: 13px; font-weight: 500; color: var(--text0); margin-bottom: 3px; }
+  .job-company { font-size: 12px; color: var(--accent); margin-bottom: 6px; }
+  .job-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 10px; padding: 2px 7px; border-radius: 3px;
+    font-family: var(--mono); font-weight: 700; letter-spacing: 0.05em;
+  }
+  .tag-blue { background: rgba(99,143,255,0.15); color: var(--accent); }
+  .tag-green { background: rgba(61,255,192,0.12); color: var(--accent2); }
+  .tag-orange { background: rgba(255,179,71,0.12); color: var(--accent4); }
+  .tag-red { background: rgba(255,107,107,0.12); color: var(--accent3); }
+  .tag-gray { background: rgba(255,255,255,0.06); color: var(--text1); }
+
+  /* Score bar */
+  .score-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 80px; }
+  .score-num { font-family: var(--mono); font-size: 18px; font-weight: 700; }
+  .score-num.high { color: var(--accent2); }
+  .score-num.mid { color: var(--accent4); }
+  .score-num.low { color: var(--accent3); }
+  .score-bar-bg { width: 70px; height: 4px; background: var(--bg0); border-radius: 2px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { padding: 8px 12px; text-align: left; font-family: var(--mono); font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(99,143,255,0.05); color: var(--text1); vertical-align: middle; }
+  tr:hover td { background: rgba(99,143,255,0.04); }
+
+  /* Status badges */
+  .status { font-size: 10px; font-family: var(--mono); font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+  .status-applied { background: rgba(99,143,255,0.15); color: var(--accent); }
+  .status-interview { background: rgba(61,255,192,0.12); color: var(--accent2); }
+  .status-rejected { background: rgba(255,107,107,0.12); color: var(--accent3); }
+  .status-watching { background: rgba(255,179,71,0.12); color: var(--accent4); }
+  .status-todo { background: rgba(255,255,255,0.07); color: var(--text1); }
+
+  /* Search / filter bar */
+  .filter-bar { display: flex; gap: 10px; margin-bottom: 18px; align-items: center; flex-wrap: wrap; }
+  .search-input {
+    flex: 1; min-width: 200px; background: var(--bg3);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 12px; color: var(--text0); font-size: 13px;
+    font-family: var(--sans); outline: none;
+  }
+  .search-input::placeholder { color: var(--text2); }
+  .search-input:focus { border-color: var(--accent); }
+  select.filter-select {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 10px; color: var(--text1);
+    font-size: 12px; font-family: var(--mono); outline: none; cursor: pointer;
+  }
+  select.filter-select:focus { border-color: var(--accent); }
+
+  /* Scraper section */
+  .company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .company-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: all 0.15s;
+  }
+  .company-card:hover { border-color: var(--border2); }
+  .company-name { font-size: 12px; font-weight: 500; color: var(--text0); }
+  .company-url { font-size: 10px; color: var(--text2); font-family: var(--mono); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+  .scrape-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .scrape-dot.active { background: var(--accent2); animation: pulse 2s infinite; }
+  .scrape-dot.idle { background: var(--text2); }
+  .scrape-dot.error { background: var(--accent3); }
+
+  /* Gap analyser */
+  .gap-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .gap-skill { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .gap-skill:last-child { border-bottom: none; }
+  .gap-skill-name { font-size: 12px; color: var(--text1); flex: 1; }
+  .gap-bar-bg { width: 100px; height: 6px; background: var(--bg0); border-radius: 3px; overflow: hidden; }
+  .gap-bar-fill { height: 100%; border-radius: 3px; }
+  .gap-pct { font-size: 11px; font-family: var(--mono); color: var(--text2); min-width: 30px; text-align: right; }
+
+  /* Modal */
+  .modal-overlay {
+    min-height: 500px; background: rgba(8,11,16,0.85);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; margin-top: 16px;
+  }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 28px; width: 100%; max-width: 580px;
+  }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text0); }
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 11px; font-family: var(--mono); color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 6px; padding: 9px 12px; color: var(--text0);
+    font-size: 13px; font-family: var(--sans); outline: none;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  textarea.form-input { resize: vertical; min-height: 90px; }
+
+  /* Charts wrapper */
+  .chart-wrap { width: 100%; }
+
+  /* Scan pulse animation */
+  @keyframes scanline { 0%{top:0;opacity:0.8} 100%{top:100%;opacity:0} }
+  .scanning-overlay { position: relative; overflow: hidden; }
+  .scanning-overlay::after {
+    content: ''; position: absolute; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+    animation: scanline 1.5s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab-btn {
+    padding: 10px 18px; font-size: 12px; font-family: var(--mono);
+    color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; background: transparent; transition: all 0.15s;
+    text-transform: uppercase; letter-spacing: 0.08em; border-top: none;
+    border-left: none; border-right: none;
+  }
+  .tab-btn:hover { color: var(--text0); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 48px 20px; color: var(--text2); }
+  .empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-text { font-size: 13px; }
+
+  /* Notification dot */
+  .notif { position: relative; display: inline-flex; }
+  .notif-dot { position: absolute; top: -3px; right: -3px; width: 7px; height: 7px; background: var(--accent3); border-radius: 50%; border: 1px solid var(--bg1); }
+
+  /* Progress ring */
+  .progress-ring { transform: rotate(-90deg); }
+  .progress-ring-bg { fill: none; stroke: var(--bg0); stroke-width: 4; }
+  .progress-ring-fill { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .mono { font-family: var(--mono); }
+  .text-accent { color: var(--accent); }
+  .text-green { color: var(--accent2); }
+  .text-orange { color: var(--accent4); }
+  .text-red { color: var(--accent3); }
+  .text-muted { color: var(--text2); }
+  .flex { display: flex; align-items: center; }
+  .flex-between { display: flex; align-items: center; justify-content: space-between; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-16 { margin-bottom: 16px; }
+  .fw-6 { font-weight: 600; }
+  .fs-12 { font-size: 12px; }
+  .fs-11 { font-size: 11px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+const { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis } = Recharts;
+
+// ─── DATA ───────────────────────────────────────────────
+const COMPANIES = [
+  // From your job_Tracker_2024.xlsx + additions — 59 total
+  { id:1,  name:'Harman',               url:'jobs.harman.com/en_US/careers',          sector:'Electronics/Tech',  status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:2,  name:'Cornerstone OnDemand', url:'careers.csod.com',                        sector:'HRTech',            status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:3,  name:'Intel',                url:'jobs.intel.com',                          sector:'Semiconductor',     status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:4,  name:'Upstox',               url:'upstox.com/careers',                      sector:'Fintech',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:5,  name:'Paytm',                url:'paytm.com/careers',                       sector:'Fintech',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:6,  name:'Seagate',              url:'seagate.com/em/en/company/careers',       sector:'Hardware',          status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:7,  name:'Dentsu',               url:'careers.dentsu.com',                      sector:'Advertising',       status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:8,  name:'Salesforce',           url:'salesforce.com/careers',                  sector:'CRM/SaaS',          status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:9,  name:'Birlasoft',            url:'birlasoft.com/careers',                   sector:'IT Services',       status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:10, name:'Revolut',              url:'revolut.com/careers',                     sector:'Fintech',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:11, name:'BCG',                  url:'careers.bcg.com',                         sector:'Consulting',        status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:12, name:'PwC',                  url:'pwc.com/gx/en/careers.html',             sector:'Big4',              status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:13, name:'EY',                   url:'careers.ey.com',                          sector:'Big4',              status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:14, name:'Zoho',                 url:'careers.zohocorp.com',                    sector:'SaaS',              status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:15, name:'State Street',         url:'statestreet.com/us/en/individual/careers',sector:'Finance',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:16, name:'IQVIA',               url:'jobs.iqvia.com',                          sector:'Healthcare',         status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:17, name:'Oracle',              url:'oracle.com/careers',                       sector:'Enterprise Tech',   status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:18, name:'Siemens',             url:'siemens.com/global/en/company/jobs',       sector:'Industrial',        status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:19, name:'Walmart',             url:'careers.walmart.com',                      sector:'Retail',            status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:20, name:'Invesco',             url:'invesco.com/corporate/en/careers',         sector:'Finance',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:21, name:'Ascensus',            url:'ascensus.com/about/careers',               sector:'Finance',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:22, name:'Groww',               url:'careers.groww.in',                         sector:'Fintech',           status:'active', jobs_found:2, last_scan:'3 hrs ago' },
+  { id:23, name:'Microsoft',           url:'careers.microsoft.com',                    sector:'Big Tech',          status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:24, name:'Wells Fargo',         url:'wellsfargojobs.com',                       sector:'Banking',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:25, name:'Nokia',               url:'nokia.com/about-us/careers',               sector:'Telecom',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:26, name:'Pearson',             url:'pearson.com/en-us/careers.html',           sector:'EdTech',            status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:27, name:'NTT Data',            url:'nttdata.com/global/en/careers',            sector:'IT Services',       status:'active', jobs_found:3, last_scan:'2 hrs ago' },
+  { id:28, name:'Target',              url:'target.com/careers',                       sector:'Retail',            status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:29, name:'Volvo Group',         url:'jobs.volvogroup.com',                      sector:'Automotive',        status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:30, name:'KPMG',               url:'kpmg.com/xx/en/home/careers.html',         sector:'Big4',              status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:31, name:'Wipro',              url:'careers.wipro.com',                         sector:'IT Services',       status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:32, name:'Mercedes-Benz',      url:'mercedes-benz.com/en/career',               sector:'Automotive',        status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:33, name:'S&P Global',         url:'careers.spglobal.com',                      sector:'Finance/Data',      status:'active', jobs_found:2, last_scan:'1 hr ago' },
+  { id:34, name:'Accenture',          url:'accenture.com/in-en/careers',               sector:'Consulting',        status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:35, name:'Northern Trust',     url:'northerntrust.com/united-states/careers',   sector:'Banking',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:36, name:'Bristol-Myers Squibb',url:'careers.bms.com',                         sector:'Pharma',            status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:37, name:'Shell',              url:'careers.shell.com',                         sector:'Energy',            status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:38, name:'ZS Associates',      url:'zs.com/careers',                            sector:'Consulting',        status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:39, name:'Myntra',             url:'myntra.com/careers',                        sector:'Fashion Tech',      status:'active', jobs_found:1, last_scan:'2 hrs ago' },
+  { id:40, name:'American Express',   url:'aexp.com/careers',                          sector:'Fintech',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:41, name:'Swiggy',             url:'careers.swiggy.com',                        sector:'Food Tech',         status:'active', jobs_found:2, last_scan:'3 hrs ago' },
+  { id:42, name:'Flipkart',           url:'careers.flipkart.com',                      sector:'E-commerce',        status:'active', jobs_found:3, last_scan:'1 hr ago' },
+  { id:43, name:'CRED',               url:'careers.cred.club',                         sector:'Fintech',           status:'active', jobs_found:1, last_scan:'2 hrs ago' },
+  { id:44, name:'PhonePe',            url:'phonepe.com/careers',                       sector:'Fintech',           status:'active', jobs_found:2, last_scan:'4 hrs ago' },
+  { id:45, name:'Zepto',              url:'careers.zepto.com',                         sector:'Quick Commerce',    status:'idle', jobs_found:1, last_scan:'6 hrs ago' },
+  { id:46, name:'Meesho',             url:'meesho.io/jobs',                            sector:'E-commerce',        status:'active', jobs_found:1, last_scan:'3 hrs ago' },
+  { id:47, name:'Urban Company',      url:'urbancompany.com/careers',                  sector:'Services',          status:'active', jobs_found:1, last_scan:'5 hrs ago' },
+  { id:48, name:'Zomato',             url:'zomato.com/careers',                        sector:'Food Tech',         status:'error', jobs_found:0, last_scan:'Failed' },
+  { id:49, name:'Razorpay',           url:'razorpay.com/jobs',                         sector:'Fintech',           status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:50, name:'Genpact',            url:'genpact.com/careers',                       sector:'BPO/Analytics',     status:'active', jobs_found:4, last_scan:'1 hr ago' },
+  { id:51, name:'Deloitte',           url:'careers.deloitte.com/in',                   sector:'Big4',              status:'active', jobs_found:3, last_scan:'1 hr ago' },
+  { id:52, name:'Gainwell Tech',      url:'jobs.gainwelltechnologies.com',              sector:'Healthcare IT',     status:'active', jobs_found:1, last_scan:'2 hrs ago' },
+  { id:53, name:'Mu Sigma',           url:'mu-sigma.com/careers',                      sector:'Analytics',         status:'active', jobs_found:2, last_scan:'4 hrs ago' },
+  { id:54, name:'Fractal Analytics',  url:'fractal.ai/careers',                        sector:'Analytics',         status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:55, name:'Tiger Analytics',    url:'tigeranalytics.com/careers',                sector:'Analytics',         status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:56, name:'Infosys',            url:'infosys.com/careers',                       sector:'IT Services',       status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:57, name:'TCS',                url:'tcs.com/careers',                           sector:'IT Services',       status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:58, name:'HCL Technologies',   url:'hcltech.com/careers',                       sector:'IT Services',       status:'idle', jobs_found:0, last_scan:'Never' },
+  { id:59, name:'Capgemini',          url:'capgemini.com/in-en/careers',               sector:'IT Services',       status:'idle', jobs_found:0, last_scan:'Never' },
+];
+
+const JOBS = [
+  { id:1, title:'Junior Data Analyst — BI', company:'Flipkart', location:'Bangalore', type:'Full-time', source:'Career Page', score:91, tier:'high', posted:'Today', status:'todo', skills:['SQL','Power BI','Python'], new:true },
+  { id:2, title:'Data Analyst (SQL + Python)', company:'Gainwell Technologies', location:'Bangalore', type:'Full-time', source:'Career Page', score:87, tier:'high', posted:'Yesterday', status:'applied', skills:['SQL','Python','Power BI'], new:false },
+  { id:3, title:'Associate Data Analyst', company:'S&P Global', location:'Gurgaon', type:'Full-time', source:'Adzuna', score:88, tier:'high', posted:'2 days ago', status:'interview', skills:['SQL','Excel','Analytics'], new:false },
+  { id:4, title:'Business Analyst', company:'CRED', location:'Bangalore', type:'Full-time', source:'Career Page', score:79, tier:'high', posted:'Today', status:'todo', skills:['SQL','Python','Metrics'], new:true },
+  { id:5, title:'Data Analyst — Growth', company:'Swiggy', location:'Bangalore', type:'Full-time', source:'Career Page', score:83, tier:'high', posted:'2 days ago', status:'applied', skills:['SQL','Python','Dashboards'], new:false },
+  { id:6, title:'MIS Executive', company:'Meesho', location:'Bangalore', type:'Full-time', source:'Career Page', score:76, tier:'mid', posted:'3 days ago', status:'todo', skills:['Excel','SQL','Reporting'], new:false },
+  { id:7, title:'Data Analyst (0–3 yrs)', company:'Genpact', location:'Pan-India', type:'Full-time', source:'Adzuna', score:84, tier:'high', posted:'Today', status:'todo', skills:['SQL','Python','Analytics'], new:true },
+  { id:8, title:'Business Intelligence Analyst', company:'PhonePe', location:'Bangalore', type:'Full-time', source:'Career Page', score:82, tier:'high', posted:'1 day ago', status:'watching', skills:['Power BI','SQL','KPIs'], new:false },
+  { id:9, title:'Junior Business Analyst', company:'Groww', location:'Bangalore', type:'Full-time', source:'Career Page', score:77, tier:'mid', posted:'2 days ago', status:'applied', skills:['SQL','Excel','Finance'], new:false },
+  { id:10, title:'Analyst — Data Science', company:'Deloitte India', location:'Hyderabad', type:'Full-time', source:'Career Page', score:78, tier:'mid', posted:'3 days ago', status:'todo', skills:['Python','ML','SQL'], new:false },
+  { id:11, title:'Data Analyst — Fresher', company:'NTT Data', location:'Pan-India', type:'Full-time', source:'Adzuna', score:81, tier:'high', posted:'Yesterday', status:'todo', skills:['SQL','Power BI','Excel'], new:false },
+  { id:12, title:'Associate Analyst', company:'Mu Sigma', location:'Bangalore', type:'Full-time', source:'Career Page', score:73, tier:'mid', posted:'4 days ago', status:'rejected', skills:['Analytics','Excel','SQL'], new:false },
+  { id:13, title:'Data Research Analyst', company:'Urban Company', location:'Gurgaon', type:'Full-time', source:'Career Page', score:74, tier:'mid', posted:'3 days ago', status:'watching', skills:['Research','SQL','Excel'], new:false },
+  { id:14, title:'MIS Analyst', company:'Nykaa', location:'Mumbai', type:'Full-time', source:'Career Page', score:70, tier:'mid', posted:'5 days ago', status:'todo', skills:['Excel','MIS','Reporting'], new:false },
+  { id:15, title:'Data Analyst Intern → FTE', company:'Zepto', location:'Mumbai', type:'Contract', source:'Career Page', score:68, tier:'mid', posted:'6 days ago', status:'applied', skills:['SQL','Python','Analytics'], new:false },
+];
+
+const APPLICATIONS = JOBS.filter(j => j.status !== 'todo');
+
+const ACTIVITY_DATA = [
+  { day:'Mon', applied:3, viewed:12, scores:8 },
+  { day:'Tue', applied:5, viewed:18, scores:14 },
+  { day:'Wed', applied:2, viewed:9, scores:6 },
+  { day:'Thu', applied:7, viewed:22, scores:19 },
+  { day:'Fri', applied:4, viewed:15, scores:11 },
+  { day:'Sat', applied:6, viewed:20, scores:16 },
+  { day:'Sun', applied:3, viewed:11, scores:9 },
+];
+
+const SCORE_DIST = [
+  { range:'90-100', count:2 }, { range:'80-89', count:6 },
+  { range:'70-79', count:5 }, { range:'60-69', count:2 },
+];
+
+const SKILLS_RADAR = [
+  { skill:'SQL', you:90, market:85 },
+  { skill:'Python', you:78, market:80 },
+  { skill:'Power BI', you:82, market:70 },
+  { skill:'ML/AI', you:72, market:65 },
+  { skill:'RAG/LLM', you:75, market:55 },
+  { skill:'Statistics', you:60, market:72 },
+];
+
+const GAP_SKILLS = [
+  { name:'SQL', match:90, color:'#638fff' },
+  { name:'Python', match:78, color:'#638fff' },
+  { name:'Power BI', match:82, color:'#3dffc0' },
+  { name:'Pandas/NumPy', match:85, color:'#3dffc0' },
+  { name:'Scikit-learn', match:72, color:'#ffb347' },
+  { name:'XGBoost', match:68, color:'#ffb347' },
+  { name:'RAG/LLM', match:75, color:'#3dffc0' },
+  { name:'Tableau', match:20, color:'#ff6b6b' },
+  { name:'AWS/Azure', match:15, color:'#ff6b6b' },
+  { name:'Statistics', match:55, color:'#ffb347' },
+];
+
+// ─── COMPONENTS ─────────────────────────────────────────
+
+function ScoreBar({ score }) {
+  const cls = score >= 80 ? 'high' : score >= 70 ? 'mid' : 'low';
+  const color = score >= 80 ? '#3dffc0' : score >= 70 ? '#ffb347' : '#ff6b6b';
+  return (
+    <div className="score-wrap">
+      <span className={`score-num ${cls}`}>{score}</span>
+      <div className="score-bar-bg">
+        <div className="score-bar-fill" style={{ width:`${score}%`, background:color }} />
+      </div>
+    </div>
+  );
+}
+
+function StatusBadge({ status }) {
+  const map = { applied:'status-applied', interview:'status-interview', rejected:'status-rejected', watching:'status-watching', todo:'status-todo' };
+  return <span className={`status ${map[status]||'status-todo'}`}>{status}</span>;
+}
+
+function NavIcon({ id }) {
+  const icons = {
+    dashboard: <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>,
+    jobs: <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><line x1="2" y1="8" x2="14" y2="8"/></svg>,
+    companies: <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="2" y="6" width="12" height="8" rx="1"/><path d="M5 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/><line x1="8" y1="9" x2="8" y2="12"/></svg>,
+    tracker: <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="2" y="2" width="12" height="12" rx="1.5"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="11" y2="9"/><line x1="5" y1="12" x2="8" y2="12"/></svg>,
+    analyser: <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><circle cx="7" cy="7" r="5"/><line x1="11" y1="11" x2="14" y2="14"/><line x1="5" y1="7" x2="9" y2="7"/><line x1="7" y1="5" x2="7" y2="9"/></svg>,
+    settings: <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3"/></svg>,
+  };
+  return <span className="nav-icon">{icons[id]}</span>;
+}
+
+// ─── VIEWS ──────────────────────────────────────────────
+
+function Dashboard({ setView }) {
+  const totalJobs = JOBS.length;
+  const applied = JOBS.filter(j=>j.status==='applied'||j.status==='interview').length;
+  const interviews = JOBS.filter(j=>j.status==='interview').length;
+  const newJobs = JOBS.filter(j=>j.new).length;
+  const avgScore = Math.round(JOBS.reduce((a,j)=>a+j.score,0)/JOBS.length);
+  const companiesActive = COMPANIES.filter(c=>c.status==='active').length;
+
+  return (
+    <div>
+      <div className="stat-grid">
+        <div className="stat-card blue">
+          <div className="stat-label">Jobs discovered</div>
+          <div className="stat-value">{totalJobs}</div>
+          <div className="stat-change up">↑ {newJobs} new today</div>
+        </div>
+        <div className="stat-card green">
+          <div className="stat-label">Applied</div>
+          <div className="stat-value">{applied}</div>
+          <div className="stat-change">{interviews} in interview</div>
+        </div>
+        <div className="stat-card orange">
+          <div className="stat-label">Avg fit score</div>
+          <div className="stat-value mono">{avgScore}</div>
+          <div className="stat-change up">↑ +3 vs last week</div>
+        </div>
+        <div className="stat-card red">
+          <div className="stat-label">Companies tracked</div>
+          <div className="stat-value">{COMPANIES.length}</div>
+          <div className="stat-change">{companiesActive} actively scanning</div>
+        </div>
+      </div>
+
+      <div className="grid-2" style={{marginBottom:16}}>
+        <div className="card">
+          <div className="card-header">
+            <div><div className="card-title">Weekly activity</div><div className="card-sub">Applications + scores this week</div></div>
+          </div>
+          <div className="chart-wrap" style={{height:180}}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={ACTIVITY_DATA} margin={{top:5,right:5,bottom:0,left:-20}}>
+                <defs>
+                  <linearGradient id="ga" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#638fff" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#638fff" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3dffc0" stopOpacity={0.25}/>
+                    <stop offset="95%" stopColor="#3dffc0" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,143,255,0.08)"/>
+                <XAxis dataKey="day" tick={{fill:'#5a6a85',fontSize:10}} axisLine={false} tickLine={false}/>
+                <YAxis tick={{fill:'#5a6a85',fontSize:10}} axisLine={false} tickLine={false}/>
+                <Tooltip contentStyle={{background:'#1e2635',border:'1px solid rgba(99,143,255,0.2)',borderRadius:6,fontSize:12}}/>
+                <Area type="monotone" dataKey="applied" stroke="#638fff" fill="url(#ga)" strokeWidth={2} name="Applied"/>
+                <Area type="monotone" dataKey="scores" stroke="#3dffc0" fill="url(#gb)" strokeWidth={2} name="Scored"/>
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <div><div className="card-title">Fit score distribution</div><div className="card-sub">Across all {totalJobs} discovered roles</div></div>
+          </div>
+          <div className="chart-wrap" style={{height:180}}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={SCORE_DIST} margin={{top:5,right:5,bottom:0,left:-20}}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,143,255,0.08)"/>
+                <XAxis dataKey="range" tick={{fill:'#5a6a85',fontSize:10}} axisLine={false} tickLine={false}/>
+                <YAxis tick={{fill:'#5a6a85',fontSize:10}} axisLine={false} tickLine={false}/>
+                <Tooltip contentStyle={{background:'#1e2635',border:'1px solid rgba(99,143,255,0.2)',borderRadius:6,fontSize:12}}/>
+                <Bar dataKey="count" radius={[3,3,0,0]} name="Jobs">
+                  {SCORE_DIST.map((e,i)=><Cell key={i} fill={i===0?'#3dffc0':i===1?'#638fff':i===2?'#ffb347':'#ff6b6b'}/>)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header">
+          <div><div className="card-title">Top opportunities — today</div><div className="card-sub">Highest fit score, newly posted</div></div>
+          <button className="btn" onClick={()=>setView('jobs')}>View all →</button>
+        </div>
+        <div className="job-list">
+          {JOBS.filter(j=>j.new||j.score>=85).slice(0,4).map(job=>(
+            <div key={job.id} className={`job-card${job.new?' new':''}`}>
+              <div>
+                <div className="job-title">{job.title} {job.new && <span className="tag tag-green" style={{marginLeft:6}}>NEW</span>}</div>
+                <div className="job-company">{job.company}</div>
+                <div className="job-meta">
+                  <span className="tag tag-gray">{job.location}</span>
+                  <span className="tag tag-blue">{job.source}</span>
+                  {job.skills.slice(0,2).map(s=><span key={s} className="tag tag-gray">{s}</span>)}
+                  <span className="tag tag-gray">{job.posted}</span>
+                </div>
+              </div>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
+                <ScoreBar score={job.score}/>
+                <StatusBadge status={job.status}/>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Jobs() {
+  const [search, setSearch] = useState('');
+  const [tierFilter, setTierFilter] = useState('all');
+  const [sourceFilter, setSourceFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('score');
+
+  const filtered = JOBS
+    .filter(j => {
+      const q = search.toLowerCase();
+      return (!q || j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.skills.some(s=>s.toLowerCase().includes(q)));
+    })
+    .filter(j => tierFilter === 'all' || j.tier === tierFilter)
+    .filter(j => sourceFilter === 'all' || j.source === sourceFilter)
+    .sort((a,b) => sortBy === 'score' ? b.score - a.score : sortBy === 'date' ? a.id - b.id : 0);
+
+  return (
+    <div>
+      <div className="filter-bar">
+        <input className="search-input" placeholder="Search jobs, companies, skills…" value={search} onChange={e=>setSearch(e.target.value)}/>
+        <select className="filter-select" value={tierFilter} onChange={e=>setTierFilter(e.target.value)}>
+          <option value="all">All tiers</option>
+          <option value="high">High probability</option>
+          <option value="mid">Medium</option>
+          <option value="stretch">Stretch</option>
+        </select>
+        <select className="filter-select" value={sourceFilter} onChange={e=>setSourceFilter(e.target.value)}>
+          <option value="all">All sources</option>
+          <option value="Career Page">Career pages</option>
+          <option value="Adzuna">Adzuna</option>
+          <option value="RSS">RSS</option>
+        </select>
+        <select className="filter-select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
+          <option value="score">Sort: fit score</option>
+          <option value="date">Sort: newest</option>
+        </select>
+        <span className="text-muted fs-11 mono">{filtered.length} roles</span>
+      </div>
+      <div className="job-list">
+        {filtered.map(job=>(
+          <div key={job.id} className={`job-card${job.new?' new':''}`}>
+            <div>
+              <div className="job-title">{job.title} {job.new && <span className="tag tag-green" style={{marginLeft:6}}>NEW</span>}</div>
+              <div className="job-company">{job.company} · <span className="text-muted">{job.location}</span></div>
+              <div className="job-meta" style={{marginTop:6}}>
+                <span className="tag tag-blue">{job.source}</span>
+                <span className={`tag tag-${job.tier==='high'?'green':job.tier==='mid'?'orange':'red'}`}>{job.tier}</span>
+                {job.skills.map(s=><span key={s} className="tag tag-gray">{s}</span>)}
+                <span className="tag tag-gray">{job.posted}</span>
+              </div>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
+              <ScoreBar score={job.score}/>
+              <div style={{display:'flex',gap:6,alignItems:'center'}}>
+                <StatusBadge status={job.status}/>
+                <button className="btn btn-success" style={{padding:'4px 10px',fontSize:11}}>Apply ↗</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Companies({ addCompany }) {
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ name:'', url:'', sector:'' });
+  const [scanning, setScanning] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState(null);
+  const [sectorFilter, setSectorFilter] = useState('all');
+  const [searchQ, setSearchQ] = useState('');
+
+  const sectors = ['all', ...Array.from(new Set(COMPANIES.map(c=>c.sector))).sort()];
+  const filtered = COMPANIES
+    .filter(c => sectorFilter==='all' || c.sector===sectorFilter)
+    .filter(c => !searchQ || c.name.toLowerCase().includes(searchQ.toLowerCase()));
+
+  const handleScan = () => {
+    setScanning(true);
+    setTimeout(()=>setScanning(false), 3500);
+  };
+
+  const handleImport = () => {
+    setImporting(true);
+    // Production: fetch('/api/import/tracker', {method:'POST'}).then(r=>r.json()).then(setImportResult)
+    setTimeout(()=>{ setImportResult({imported:147, skipped:48}); setImporting(false); }, 2200);
+  };
+
+  const handleAdd = () => {
+    if(form.name && form.url) {
+      addCompany({ ...form, id: Date.now(), status:'idle', jobs_found:0, last_scan:'Never' });
+      setForm({ name:'', url:'', sector:'' });
+      setShowForm(false);
+    }
+  };
+
+  return (
+    <div>
+      {/* Import banner */}
+      {!importResult ? (
+        <div className="card" style={{marginBottom:14,background:'rgba(99,143,255,0.06)',borderColor:'rgba(99,143,255,0.2)'}}>
+          <div style={{display:'flex',alignItems:'center',gap:16}}>
+            <div style={{flex:1}}>
+              <div style={{fontSize:13,fontWeight:500,color:'var(--text0)'}}>Import your job_Tracker_2024.xlsx</div>
+              <div style={{fontSize:11,color:'var(--text2)',marginTop:2}}>195 entries from your existing tracker will be imported and merged into the CRM — no duplicates.</div>
+            </div>
+            <button className={`btn btn-primary${importing?' scanning-overlay':''}`} onClick={handleImport} disabled={importing}>
+              {importing ? '⟳ Importing…' : '↑ Import tracker'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="card" style={{marginBottom:14,background:'rgba(61,255,192,0.05)',borderColor:'rgba(61,255,192,0.2)'}}>
+          <div style={{fontSize:13,color:'var(--accent2)',fontWeight:500}}>
+            ✓ Imported {importResult.imported} entries from your tracker · {importResult.skipped} duplicates skipped
+          </div>
+        </div>
+      )}
+
+      <div className="filter-bar">
+        <input className="search-input" style={{maxWidth:200}} placeholder="Search companies…" value={searchQ} onChange={e=>setSearchQ(e.target.value)}/>
+        <select className="filter-select" value={sectorFilter} onChange={e=>setSectorFilter(e.target.value)}>
+          {sectors.map(s=><option key={s} value={s}>{s==='all'?'All sectors':s}</option>)}
+        </select>
+        <span className="text-muted fs-11 mono">{filtered.length} / {COMPANIES.length} companies</span>
+        <button className="btn btn-success" onClick={handleScan} style={{marginLeft:'auto'}}>
+          {scanning ? '⟳ Scanning all…' : '▶ Run full scan'}
+        </button>
+        <button className="btn btn-primary" onClick={()=>setShowForm(true)}>+ Add company</button>
+      </div>
+
+      <div className={`company-grid${scanning?' scanning-overlay':''}`}>
+        {filtered.map(c=>(
+          <div key={c.id} className="company-card">
+            <div style={{minWidth:0}}>
+              <div className="company-name">{c.name}</div>
+              <div className="company-url">{c.url}</div>
+              <div style={{marginTop:5,display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
+                <span className="tag tag-gray" style={{fontSize:9}}>{c.sector}</span>
+                {c.jobs_found>0 && <span className="tag tag-green" style={{fontSize:9}}>{c.jobs_found} new</span>}
+              </div>
+              <div className="text-muted" style={{fontSize:10,marginTop:3,fontFamily:'var(--mono)'}}>{c.last_scan}</div>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:3,flexShrink:0}}>
+              <div className={`scrape-dot ${c.status}`}/>
+              <span className="text-muted" style={{fontSize:9,fontFamily:'var(--mono)'}}>{c.status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-title">Add company to watchlist</div>
+            <div className="form-group">
+              <label className="form-label">Company name</label>
+              <input className="form-input" placeholder="e.g. Razorpay" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Career page URL</label>
+              <input className="form-input" placeholder="e.g. razorpay.com/jobs" value={form.url} onChange={e=>setForm({...form,url:e.target.value})}/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Sector</label>
+              <input className="form-input" placeholder="e.g. Fintech" value={form.sector} onChange={e=>setForm({...form,sector:e.target.value})}/>
+            </div>
+            <div style={{display:'flex',gap:8,marginTop:4}}>
+              <button className="btn btn-primary" onClick={handleAdd}>Add company</button>
+              <button className="btn" onClick={()=>setShowForm(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Tracker() {
+  const [tab, setTab] = useState('all');
+  const statusTabs = ['all','applied','interview','watching','rejected'];
+  const filtered = tab === 'all' ? APPLICATIONS : APPLICATIONS.filter(a=>a.status===tab);
+
+  const counts = {
+    applied: APPLICATIONS.filter(a=>a.status==='applied').length,
+    interview: APPLICATIONS.filter(a=>a.status==='interview').length,
+    watching: APPLICATIONS.filter(a=>a.status==='watching').length,
+    rejected: APPLICATIONS.filter(a=>a.status==='rejected').length,
+  };
+  const statusColors = ['#638fff','#638fff','#3dffc0','#ffb347','#ff6b6b'];
+  const pieData = [
+    { name:'Applied', value:counts.applied },
+    { name:'Interview', value:counts.interview },
+    { name:'Watching', value:counts.watching },
+    { name:'Rejected', value:counts.rejected },
+  ];
+
+  return (
+    <div>
+      <div className="grid-2" style={{marginBottom:16}}>
+        <div className="card">
+          <div className="card-header">
+            <div><div className="card-title">Pipeline status</div><div className="card-sub">{APPLICATIONS.length} total applications</div></div>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:20}}>
+            <div style={{height:160,width:160,flexShrink:0}}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
+                    {pieData.map((e,i)=><Cell key={i} fill={statusColors[i+1]}/>)}
+                  </Pie>
+                  <Tooltip contentStyle={{background:'#1e2635',border:'1px solid rgba(99,143,255,0.2)',borderRadius:6,fontSize:12}}/>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div style={{flex:1}}>
+              {Object.entries(counts).map(([k,v],i)=>(
+                <div key={k} style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                  <div style={{width:8,height:8,borderRadius:2,background:statusColors[i+1],flexShrink:0}}/>
+                  <span style={{flex:1,fontSize:12,color:'var(--text1)',textTransform:'capitalize'}}>{k}</span>
+                  <span style={{fontFamily:'var(--mono)',fontSize:13,color:'var(--text0)',fontWeight:600}}>{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <div><div className="card-title">Key metrics</div><div className="card-sub">Your application funnel</div></div>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:12,paddingTop:4}}>
+            {[
+              { label:'Response rate', value:`${Math.round((counts.interview/APPLICATIONS.length)*100)}%`, color:'var(--accent2)' },
+              { label:'Avg score of applied roles', value:`${Math.round(APPLICATIONS.reduce((a,j)=>a+j.score,0)/APPLICATIONS.length)}`, color:'var(--accent)' },
+              { label:'Interview conversion', value:`${Math.round((counts.interview/(counts.applied+counts.interview))*100)}%`, color:'var(--accent4)' },
+              { label:'Active pipeline', value:`${counts.applied+counts.interview}`, color:'var(--accent)' },
+            ].map(m=>(
+              <div key={m.label} className="flex-between">
+                <span style={{fontSize:12,color:'var(--text1)'}}>{m.label}</span>
+                <span style={{fontFamily:'var(--mono)',fontSize:16,fontWeight:700,color:m.color}}>{m.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header">
+          <div><div className="card-title">Application log</div></div>
+          <button className="btn btn-primary">+ Log application</button>
+        </div>
+        <div className="tabs">
+          {statusTabs.map(t=>(
+            <button key={t} className={`tab-btn${tab===t?' active':''}`} onClick={()=>setTab(t)}>
+              {t} {t!=='all' && counts[t]!==undefined && <span style={{marginLeft:4,opacity:0.6}}>({counts[t]||filtered.length})</span>}
+            </button>
+          ))}
+        </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th><th>Company</th><th>Score</th><th>Source</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(a=>(
+                <tr key={a.id}>
+                  <td style={{color:'var(--text0)',fontWeight:500}}>{a.title}</td>
+                  <td style={{color:'var(--accent)'}}>{a.company}</td>
+                  <td>
+                    <span style={{fontFamily:'var(--mono)',fontWeight:700,color:a.score>=80?'var(--accent2)':a.score>=70?'var(--accent4)':'var(--accent3)'}}>{a.score}</span>
+                  </td>
+                  <td>{a.source}</td>
+                  <td><StatusBadge status={a.status}/></td>
+                  <td>
+                    <div style={{display:'flex',gap:6}}>
+                      <button className="btn" style={{padding:'3px 8px',fontSize:10}}>Notes</button>
+                      <button className="btn" style={{padding:'3px 8px',fontSize:10}}>Update</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GapAnalyser() {
+  const [analysing, setAnalysing] = useState(false);
+  const [jdText, setJdText] = useState('');
+  const [result, setResult] = useState(null);
+
+  const mockResult = {
+    score: 84,
+    match_summary: 'Strong match on SQL, Python, Power BI, and data quality skills. RAG/LLM experience is a standout differentiator. Key gaps: no Tableau or cloud platform (AWS/Azure) experience mentioned.',
+    matched: ['SQL', 'Python', 'Power BI', 'Pandas', 'Data validation', 'KPI tracking', 'Cross-team collab', 'Agile'],
+    missing: ['Tableau', 'AWS/Azure', 'dbt', 'Spark'],
+    suggestions: [
+      'Add a line about any AWS/S3 usage even informally',
+      'Mention Tableau if you\'ve tried it — even free public version',
+      'Quantify the RAG system performance improvement more specifically',
+    ]
+  };
+
+  const handleAnalyse = () => {
+    if(!jdText.trim()) return;
+    setAnalysing(true);
+    setTimeout(()=>{ setResult(mockResult); setAnalysing(false); }, 2200);
+  };
+
+  return (
+    <div>
+      <div className="grid-2" style={{marginBottom:16}}>
+        <div className="card">
+          <div className="card-header">
+            <div><div className="card-title">Skill match radar</div><div className="card-sub">Your profile vs market demand</div></div>
+          </div>
+          <div style={{height:220}}>
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart data={SKILLS_RADAR}>
+                <PolarGrid stroke="rgba(99,143,255,0.12)"/>
+                <PolarAngleAxis dataKey="skill" tick={{fill:'#5a6a85',fontSize:10}}/>
+                <Radar name="You" dataKey="you" stroke="#638fff" fill="#638fff" fillOpacity={0.2} strokeWidth={2}/>
+                <Radar name="Market" dataKey="market" stroke="#3dffc0" fill="#3dffc0" fillOpacity={0.1} strokeWidth={1.5} strokeDasharray="4 3"/>
+                <Tooltip contentStyle={{background:'#1e2635',border:'1px solid rgba(99,143,255,0.2)',borderRadius:6,fontSize:12}}/>
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <div><div className="card-title">Skill coverage</div><div className="card-sub">Match % to avg job requirements</div></div>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:2,paddingTop:4}}>
+            {GAP_SKILLS.map(s=>(
+              <div key={s.name} className="gap-skill">
+                <span className="gap-skill-name">{s.name}</span>
+                <div className="gap-bar-bg">
+                  <div className="gap-bar-fill" style={{width:`${s.match}%`,background:s.color}}/>
+                </div>
+                <span className="gap-pct mono">{s.match}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header">
+          <div><div className="card-title">JD gap analyser</div><div className="card-sub">Paste any job description to score your resume against it</div></div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+          <div>
+            <div className="form-group">
+              <label className="form-label">Paste job description</label>
+              <textarea className="form-input" style={{minHeight:160}} placeholder="Paste the full job description here…" value={jdText} onChange={e=>setJdText(e.target.value)}/>
+            </div>
+            <button className={`btn btn-primary${analysing?' scanning-overlay':''}`} onClick={handleAnalyse} disabled={analysing} style={{width:'100%'}}>
+              {analysing ? '⟳ Analysing with Claude Haiku…' : '▶ Analyse fit score'}
+            </button>
+          </div>
+          <div>
+            {result ? (
+              <div>
+                <div style={{display:'flex',alignItems:'center',gap:14,marginBottom:16}}>
+                  <div style={{fontFamily:'var(--mono)',fontSize:42,fontWeight:700,color:result.score>=80?'var(--accent2)':'var(--accent4)'}}>{result.score}</div>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:600,color:'var(--text0)'}}>Fit score</div>
+                    <div style={{fontSize:11,color:'var(--text2)'}}>vs your current resume</div>
+                  </div>
+                </div>
+                <div style={{fontSize:12,color:'var(--text1)',marginBottom:12,lineHeight:1.6}}>{result.match_summary}</div>
+                <div style={{display:'flex',gap:12}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:10,fontFamily:'var(--mono)',color:'var(--accent2)',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.08em'}}>Matched skills</div>
+                    {result.matched.map(s=><div key={s} className="tag tag-green" style={{display:'inline-block',margin:'2px 3px 2px 0'}}>{s}</div>)}
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:10,fontFamily:'var(--mono)',color:'var(--accent3)',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.08em'}}>Gaps</div>
+                    {result.missing.map(s=><div key={s} className="tag tag-red" style={{display:'inline-block',margin:'2px 3px 2px 0'}}>{s}</div>)}
+                  </div>
+                </div>
+                <div style={{marginTop:14}}>
+                  <div style={{fontSize:10,fontFamily:'var(--mono)',color:'var(--accent4)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.08em'}}>Resume tweaks</div>
+                  {result.suggestions.map((s,i)=>(
+                    <div key={i} style={{fontSize:11,color:'var(--text1)',marginBottom:6,paddingLeft:12,borderLeft:'2px solid var(--accent4)',lineHeight:1.5}}>{s}</div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="empty">
+                <div className="empty-icon" style={{fontSize:28}}>◎</div>
+                <div className="empty-text">Paste a JD on the left to see your fit score, matched skills, gaps, and resume improvement tips powered by Claude Haiku.</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Settings() {
+  return (
+    <div>
+      <div className="card" style={{marginBottom:16}}>
+        <div className="card-header"><div className="card-title">Resume</div></div>
+        <div style={{display:'flex',alignItems:'center',gap:16,padding:'4px 0'}}>
+          <div style={{background:'var(--bg3)',border:'1px solid var(--border2)',borderRadius:8,padding:'12px 16px',flex:1}}>
+            <div style={{fontSize:13,fontWeight:500,color:'var(--accent2)'}}>Sunil_Kumar.pdf</div>
+            <div style={{fontSize:11,color:'var(--text2)',marginTop:2,fontFamily:'var(--mono)'}}>Uploaded · 1.6 yrs exp · SQL · Python · Power BI · RAG</div>
+          </div>
+          <button className="btn btn-primary">Replace resume</button>
+        </div>
+      </div>
+      <div className="card" style={{marginBottom:16}}>
+        <div className="card-header"><div className="card-title">API configuration</div></div>
+        <div style={{display:'flex',flexDirection:'column',gap:12}}>
+          {[
+            {label:'Claude API key (Haiku)', placeholder:'sk-ant-…', type:'password'},
+            {label:'Adzuna App ID', placeholder:'Your Adzuna app ID'},
+            {label:'Adzuna API key', placeholder:'Your Adzuna key', type:'password'},
+          ].map(f=>(
+            <div key={f.label} className="form-group" style={{marginBottom:0}}>
+              <label className="form-label">{f.label}</label>
+              <input className="form-input" type={f.type||'text'} placeholder={f.placeholder}/>
+            </div>
+          ))}
+          <button className="btn btn-primary" style={{alignSelf:'flex-start',marginTop:4}}>Save keys</button>
+        </div>
+      </div>
+      <div className="card">
+        <div className="card-header"><div className="card-title">Scan schedule</div></div>
+        <div style={{display:'flex',flexDirection:'column',gap:12}}>
+          {[
+            {label:'Scan frequency', options:['Every 2 hours','Every 6 hours','Daily','Manual only']},
+            {label:'Minimum fit score to show', options:['All (0+)','60+','70+','80+']},
+            {label:'Target locations', options:['Bangalore','Pan-India','Remote','Any']},
+          ].map(f=>(
+            <div key={f.label} className="flex-between">
+              <span style={{fontSize:12,color:'var(--text1)'}}>{f.label}</span>
+              <select className="filter-select">{f.options.map(o=><option key={o}>{o}</option>)}</select>
+            </div>
+          ))}
+          <button className="btn btn-primary" style={{alignSelf:'flex-start',marginTop:4}}>Save preferences</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── APP SHELL ────────────────────────────────────────────
+function App() {
+  const [view, setView] = useState('dashboard');
+  const [companies, setCompanies] = useState(COMPANIES);
+
+  const newCount = JOBS.filter(j=>j.new).length;
+
+  const navItems = [
+    { id:'dashboard', label:'Dashboard', icon:'dashboard' },
+    { id:'jobs', label:'Discover jobs', icon:'jobs', badge: newCount },
+    { id:'companies', label:'Company scraper', icon:'companies' },
+    { id:'tracker', label:'My applications', icon:'tracker' },
+    { id:'analyser', label:'Gap analyser', icon:'analyser' },
+    { id:'settings', label:'Settings', icon:'settings' },
+  ];
+
+  const titles = {
+    dashboard:'Overview',
+    jobs:'Discover jobs',
+    companies:'Company career scraper',
+    tracker:'Application tracker',
+    analyser:'Resume gap analyser',
+    settings:'Settings & configuration',
+  };
+
+  const addCompany = (c) => setCompanies(prev=>[...prev,c]);
+
+  return (
+    <>
+      <div className="sidebar">
+        <div className="sidebar-logo">
+          <div className="logo-mark">JobHunter Pro</div>
+          <div className="logo-name">Sunil Kumar</div>
+          <div className="logo-sub">Data Analyst · Active search</div>
+        </div>
+        <nav className="sidebar-nav">
+          <div className="nav-section">Main</div>
+          {navItems.slice(0,2).map(item=>(
+            <div key={item.id} className={`nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
+              <NavIcon id={item.icon}/>
+              {item.label}
+              {item.badge && <span className="nav-badge">{item.badge}</span>}
+            </div>
+          ))}
+          <div className="nav-section">Tools</div>
+          {navItems.slice(2,5).map(item=>(
+            <div key={item.id} className={`nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
+              <NavIcon id={item.icon}/>
+              {item.label}
+            </div>
+          ))}
+          <div className="nav-section">Config</div>
+          {navItems.slice(5).map(item=>(
+            <div key={item.id} className={`nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
+              <NavIcon id={item.icon}/>
+              {item.label}
+            </div>
+          ))}
+        </nav>
+        <div className="sidebar-footer">
+          <div><span className="status-dot"/>Backend: connected</div>
+          <div style={{marginTop:4}}>Last scan: 2 hrs ago</div>
+        </div>
+      </div>
+
+      <div className="main">
+        <div className="topbar">
+          <div>
+            <div className="topbar-title">{titles[view]}</div>
+            <div className="topbar-sub">jobhunter.local · v1.0</div>
+          </div>
+          {view==='jobs' && <button className="btn btn-success">↻ Refresh feed</button>}
+          {view==='companies' && <button className="btn" style={{marginLeft:'auto'}}>Export list</button>}
+        </div>
+        <div className="content">
+          {view==='dashboard' && <Dashboard setView={setView}/>}
+          {view==='jobs' && <Jobs/>}
+          {view==='companies' && <Companies addCompany={addCompany}/>}
+          {view==='tracker' && <Tracker/>}
+          {view==='analyser' && <GapAnalyser/>}
+          {view==='settings' && <Settings/>}
+        </div>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
